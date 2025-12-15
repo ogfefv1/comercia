@@ -1,0 +1,28 @@
+.section-card {
+    background-color: #1D1D1D;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 1em;
+}
+
+.section-card div {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.section-card img {
+    max-height: 90%;
+    width: 90%;
+}
+
+.section-card p {
+    color: #C0C0C0;
+    font-size: large;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin: 1em;
+    text-align: center;
+}
