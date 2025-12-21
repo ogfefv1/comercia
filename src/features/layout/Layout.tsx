@@ -57,7 +57,7 @@ export default function Layout() {
             </nav>
     </header>
     <main className="container mt-4"><Outlet /></main>
-    <footer className="border-top p-3 text-muted">
+    <footer className="border-top p-3">
         &copy; University &copy; KN-P-231, 2025. &emsp;
         Разработка коммерческих приложений. &emsp;
         <Link to="/privacy">Политика конфиденциальности сайта</Link>

@@ -2,38 +2,47 @@ import { useContext } from "react";
 import type CartItem from "../../../entities/ cart/model/CartItem";
 import './CartItemCard.css';
 import { AppContext } from "../../../features/app_context/AppContext";
+import CartDao from "../../../entities/ cart/api/CartDao";
 
 export default function CartItemCard({ cartItem }: { cartItem: CartItem }) {
     const { cart, setCart } = useContext(AppContext);
 
     const incClick = () => {
         // задача: изменить количество заказа в {cartItem} и внести изменения 
-        // в общую корзину через вызов {setCart}
-        if(cartItem.product.stock && cartItem.product.stock <= cartItem.cnt)
-        {
+        // в общую корзину по вызову {setCart}
+        if(cartItem.product.stock && cartItem.product.stock <= cartItem.cnt) {
             return;
         }
         let newCart = { ...cart };
         let item = newCart.items.find(ci => ci.product.id == cartItem.product.id);
         if (item) {       
             item.cnt += 1;
-            item.price = item.product.price * item.cnt;
+            CartDao.calcPrices(newCart);
+            // item.price = item.product.price * item.cnt;
+            // newCart.price = newCart.items.reduce((s,ci) => s + ci.price, 0.0);
             setCart(newCart);
         }
     };
     const decClick = () => {
-        // Задача: реализовать ограничение: количество нельзя уменьшить до 0, а также 
+        // задача: реализовать ограничение: количество нельзя уменьшить до 0, а также
         // увеличить свыше {stock} если оно указано
-        if(cartItem.cnt <= 1)
-        {
+        if(cartItem.cnt <= 1) {
             return;
         }
         let newCart = { ...cart };
         let item = newCart.items.find(ci => ci.product.id == cartItem.product.id);
         if (item) { 
             item.cnt -= 1;
-            item.price = item.product.price * item.cnt;
+            CartDao.calcPrices(newCart);
             setCart(newCart);
+        }
+    };
+    const removeClick = () => {
+        if(confirm("Удалить позицию?")) {
+            setCart({ ...cart,
+                items: cart.items.filter(ci => ci.product.id !== cartItem.product.id),
+                price: cart.price - cartItem.price
+            });
         }
     };
 
@@ -62,6 +71,6 @@ export default function CartItemCard({ cartItem }: { cartItem: CartItem }) {
                 </div>
             }
         </div>
-        <div className="col col-1 text-end"><i className="bi bi-trash3"></i></div>
+        <div className="col col-1 text-end"><i className="bi bi-trash3" role="button" onClick={removeClick}></i></div>
     </div>;
 }

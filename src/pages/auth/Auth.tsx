@@ -16,6 +16,7 @@ function AuthForm() {
     const [password, setPassword] = useState<string>("");
     const [isFormValid, setFormValid] = useState<boolean>(false);
     const [isLoading, setLoading] = useState<boolean>(false);
+    const [remember, setRemember] = useState(true);
 
     useEffect(() => {
         setFormValid(login.length > 2 && password.length > 2);
@@ -27,9 +28,14 @@ function AuthForm() {
             .authenticate(login, password)
             .then(res => {
                 if(res == null) {
-                    alert("Во входе отказано");
+                    alert("У вході відмовлено");
                 }
                 else {
+                    // храним полученную информацию в постоянном хранилище
+                    if(remember) {
+                        window.localStorage.setItem("user-231", JSON.stringify(res));
+                    }
+                    // изменяем состояние приложения
                     setUser(res);
                 }
             })
@@ -56,6 +62,13 @@ function AuthForm() {
                     value={password} onChange={e => setPassword(e.target.value)}
                     aria-label="Пароль" aria-describedby="password-addon"/>
             </div>
+            <div>
+                <label>
+                    <input type="checkbox" checked={remember} className=" mb-3"
+                        onChange={e => setRemember(e.target.checked)}/>&thinsp;
+                    Запомнить
+                </label>
+            </div>
             {isLoading
             ? <img src="/img/loader.gif" />
             : <SiteButton 
@@ -70,6 +83,11 @@ function AuthForm() {
 
 function Profile() {
     const {user, setUser} = useContext(AppContext);
+
+    const exitAuth = () => {
+        window.localStorage.removeItem("user-231");
+        setUser(null);
+    };
 
     return <>
     <h1 className="display-4 text-center">Кабинет пользователя</h1>
@@ -92,7 +110,7 @@ function Profile() {
                 <div className="col col-1"><i className="bi bi-pencil"></i></div>
             </div>
             <div className="row text-start mt-3">
-                <div className="col col-3 offset-2">Адрес</div>
+                <div className="col col-3 offset-2">Адресс</div>
                 <div className="col col-5">{user?.address}</div>
                 <div className="col col-1"><i className="bi bi-pencil"></i></div>
             </div>
@@ -103,7 +121,7 @@ function Profile() {
                         <SiteButton 
                             text="Выход" 
                             buttonType={ButtonTypes.Red} 
-                            action={() => setUser(null)} /> 
+                            action={exitAuth} /> 
                     </div>                    
                 </div>                    
             </div>

@@ -17,6 +17,9 @@ main {
 header, footer {
     background-color: #0C0C0C;
 }
+footer {
+    color:#d1d1d1;
+}
 .navbar-brand {
     color: snow;
 }

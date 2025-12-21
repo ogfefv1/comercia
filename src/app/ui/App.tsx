@@ -11,6 +11,7 @@ import type { UserType } from '../../entities/user/model/UserType';
 import type ToastData from '../../features/app_context/ToastData';
 import type CartType from '../../entities/ cart/model/CartType';
 import Cart from '../../pages/cart/Cart';
+import CartDao from '../../entities/ cart/api/CartDao';
 
 declare global {
   interface Number {
@@ -24,7 +25,11 @@ Number.prototype.toMoney = function() : string {
 
 export default function App() {
   const [user, setUser] = useState<UserType|null>(null);
-  const [cart, setCart] = useState<CartType>({items:[], price: 0});
+
+  const [cart, setCart] = useState<CartType>(CartDao.restoreSaved());
+  useEffect(() => {
+    CartDao.save(cart);
+  }, [cart]);
   
   const [toastData, setToastData] = useState<ToastData|null>(null);
   const [toastQueue, setToastQueue] = useState<Array<ToastData>>([]);
@@ -43,7 +48,7 @@ export default function App() {
           setToastData(null);
       }
       else {
-          // якщо останнє повідомлення не те, що показується, то перемикаємо на нього
+          // если последнее сообщение не показывается, то переключаем на него
           let lastToastData = toastQueue[toastQueue.length - 1];
           if(toastData != lastToastData) {
               setToastData(lastToastData);
@@ -52,6 +57,27 @@ export default function App() {
       }
   }, [toastQueue]);
 
+  useEffect(() => {  // useEffect с пустым массивом "наблюдения"
+    // выполняется однократно, когда элемент встраивается в DOM
+    console.log("App started");
+    // на старте проверяем наличие в постоянном хранилище хранимых данных
+    const savedUser = window.localStorage.getItem("user-231");
+    if(savedUser) {
+      // восстанавливаем авторизацию
+      try {
+        setUser( JSON.parse(savedUser) );
+      }
+      catch(err) {
+        console.error("User restore error: ", err);
+      }
+      
+    }
+
+    // возвращенное действие будет выполнено при разрушении элемента (извлечение из DOM)
+    return () => {
+      console.log("App finished");
+    };
+  }, []);
 
   return <AppContext.Provider value={{user, setUser, showToast, cart, setCart}}>
     <BrowserRouter>
