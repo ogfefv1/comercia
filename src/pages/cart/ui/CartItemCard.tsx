@@ -3,12 +3,13 @@ import type CartItem from "../../../entities/ cart/model/CartItem";
 import './CartItemCard.css';
 import { AppContext } from "../../../features/app_context/AppContext";
 import CartDao from "../../../entities/ cart/api/CartDao";
+import ButtonTypes from "../../../features/buttons/types/ButtonTypes";
 
 export default function CartItemCard({ cartItem }: { cartItem: CartItem }) {
-    const { cart, setCart } = useContext(AppContext);
+    const { cart, setCart, showModal } = useContext(AppContext);
 
     const incClick = () => {
-        // задача: изменить количество заказа в {cartItem} и внести изменения 
+        // задача: изменить количество заказа в {cartItem} и внести изменения
         // в общую корзину по вызову {setCart}
         if(cartItem.product.stock && cartItem.product.stock <= cartItem.cnt) {
             return;
@@ -24,7 +25,7 @@ export default function CartItemCard({ cartItem }: { cartItem: CartItem }) {
         }
     };
     const decClick = () => {
-        // задача: реализовать ограничение: количество нельзя уменьшить до 0, а также
+        // задача: реализовать ограничение: количество не может быть уменьшено до 0, а также
         // увеличить свыше {stock} если оно указано
         if(cartItem.cnt <= 1) {
             return;
@@ -38,12 +39,19 @@ export default function CartItemCard({ cartItem }: { cartItem: CartItem }) {
         }
     };
     const removeClick = () => {
-        if(confirm("Удалить позицию?")) {
-            setCart({ ...cart,
-                items: cart.items.filter(ci => ci.product.id !== cartItem.product.id),
-                price: cart.price - cartItem.price
-            });
-        }
+        showModal({
+            title: "Необратимое действие",
+            message: "После удаления восстановить позицию можно только по прайсу. Подтверждаете удаление?",
+            buttons: [
+                {title: "Да", callback: () => {
+                    setCart({ ...cart,
+                        items: cart.items.filter(ci => ci.product.id !== cartItem.product.id),
+                        price: cart.price - cartItem.price
+                    });
+                }},
+                {title: "Нет", type: ButtonTypes.White},
+            ]
+        });
     };
 
     return <div className="row m-3 p-2 cart-item-card">

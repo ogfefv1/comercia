@@ -43,10 +43,12 @@ export default function ProductCard({product}:{product: ProductType}) {
                 <img src={product.imageUrl} alt={product.name} />
             </div>
 
-            <div className='product-card-rating'>
-                {Array.from({ length: Math.round(product.rating ?? 1) }, () => <span>★</span>)}
-                {Array.from({ length: Math.round(5-(product.rating ?? 1)) }, () => <span>☆</span>)}
-                {product.rating}</div>
+            <div className='product-card-rating' title={`Средняя оценка: ${product.rating}`}>
+                {Array.from({ length: Math.round(product.rating ?? 1) }, 
+                    (_,i) => <span key={i}>★</span>)}
+                {Array.from({ length: Math.round(5-(product.rating ?? 1)) }, 
+                    (_,i) => <span key={Math.round(product.rating ?? 1) + i}>☆</span>)}
+            </div>
             
             <p className='two-line-ellipsis'>{product.name}</p>
         </Link>

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from '../../features/layout/Layout';
 import Home from '../../pages/home/Home';
@@ -6,12 +7,14 @@ import Section from '../../pages/section/Section';
 import Product from '../../pages/product/Product';
 import Auth from '../../pages/auth/Auth';
 import { AppContext } from '../../features/app_context/AppContext';
-import { useEffect, useState } from 'react';
 import type { UserType } from '../../entities/user/model/UserType';
 import type ToastData from '../../features/app_context/ToastData';
 import type CartType from '../../entities/ cart/model/CartType';
 import Cart from '../../pages/cart/Cart';
 import CartDao from '../../entities/ cart/api/CartDao';
+import './App.css';
+import type ModalData from '../../features/modal/ModalData';
+import Modal from './Modal/Modal';
 
 declare global {
   interface Number {
@@ -79,7 +82,15 @@ export default function App() {
     };
   }, []);
 
-  return <AppContext.Provider value={{user, setUser, showToast, cart, setCart}}>
+
+
+  
+  const [modalData, setModalData] = useState<ModalData|null>(null);
+  const showModal = (data:ModalData) => {
+    setModalData(data);
+  }
+
+  return <AppContext.Provider value={{showModal, user, setUser, showToast, cart, setCart}}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -101,5 +112,8 @@ export default function App() {
                 {td.message}
             </div>)}
     </div>
+
+    <Modal modalData={modalData} setModalData={setModalData} />
+
   </AppContext.Provider>;
 }

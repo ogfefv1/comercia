@@ -13,36 +13,36 @@
 /* Extra extra large */
 @media screen and (min-width: 1400px) {  
     .content-container .section-card {
-        width: 13.0%;
+        width: 12.7%;
     }
 }
 /* Extra large */
 @media screen and (max-width: 1400px) {  
     .content-container .section-card {
-        width: 15.5%;
+        width: 15.1%;
     }
 }
 /* Large */
 @media screen and (max-width: 1200px) {  
     .content-container .section-card {
-        width: 19%;
+        width: 18.5%;
     }
 }
 /* Medium */
 @media screen and (max-width: 992px) {  
     .content-container .section-card {
-        width: 24%;
+        width: 23.5%;
     }
 }
 /* Small */
 @media screen and (max-width: 768px) {  
     .content-container .section-card {
-        width: 32%;
+        width: 31.8%;
     }
 }
 /* Extra small */
 @media screen and (max-width: 576px) {  
     .content-container .section-card {
-        width: 48%;
+        width: 48.5%;
     }
 }

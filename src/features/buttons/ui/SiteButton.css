@@ -3,6 +3,7 @@
     border-radius: 7px;
     padding: 7px 10px 7px 10px;
     font-weight: 700;
+    position: relative;
 }
 .button-red {
     background-color: maroon;
@@ -11,4 +12,11 @@
 .button-white {
     background-color: snow;
     color: rgb(86, 86, 86)
+}
+.site-button svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
 }
